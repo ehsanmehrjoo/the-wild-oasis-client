@@ -20,7 +20,7 @@ export default function Navigation() {
       {/* منوی موبایل با انیمیشن از سمت چپ */}
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-primary-900 shadow-lg p-6 transition-transform duration-300 z-50 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0 " : "-translate-x-full z-50"
         } md:hidden`}
       >
           

@@ -6,7 +6,7 @@ import bg from "@/public/bg.png"
 export default function Home() {
   return (
     <main className="mt-24">
-    <Image src={bg} quality={100} 
+    <Image src={bg} quality={80} 
      fill
      placeholder="blur"
       className="object-cover object-top"
