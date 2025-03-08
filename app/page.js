@@ -12,7 +12,7 @@ export default function Home() {
       className="object-cover object-top"
        alt="Mountains and forests with two cabins" />
 
-    <div className="relative z-10 text-center">
+    <div className="relative z-5 text-center">
       <h1 className="text-8xl text-primary-50 mb-10 tracking-tight font-normal">
         Welcome to paradise.
       </h1>
