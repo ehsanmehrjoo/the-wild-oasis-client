@@ -47,9 +47,9 @@ function SideNavigation() {
 
       {/* Side Navigation (Mobile and Desktop) */}
       <nav
-        className={`fixed md:static inset-y-0 left-0 w-64 bg-primary-1000 border-r border-primary-900 transform ${
+        className={`fixed md:static  inset-y-0 left-0 w-64 bg-primary-1000 border-r border-primary-900 transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 transition-transform duration-200 ease-in-out z-40 mt-16 md:mt-0`} // اضافه کردن mt-16 برای موبایل
+        } md:translate-x-0 transition-transform duration-200 ease-in-out z-40 mt-[6.2rem] md:mt-0`} // اضافه کردن mt-16 برای موبایل
       >
         <ul className='flex flex-col gap-2 h-full text-lg'>
           {navLinks.map((link) => (
