@@ -1,13 +1,18 @@
-import Counter from "@/app/_components/Counter";
+// import Counter from "@/app/_components/Counter";
 import CabinCard from "../_components/CabinCard";
+import { getCabins } from "@/app/_lib/data-service";
 
 export const metadata = {
     title: 'Cabins',
   }
 export default async function Page() {
+  console.log('Starting');
   // CHANGE
-   const cabins = [];
+   const cabins = await getCabins();
  
+ if (!cabins) {
+  return <p className="text-red-500">No cabins found.</p>;
+}
    return (
      <div>
        <h1 className="text-4xl mb-5 text-accent-400 font-medium">

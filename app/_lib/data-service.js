@@ -1,4 +1,5 @@
 import { eachDayOfInterval } from 'date-fns';
+import { supabase } from '@/app/_lib/supabase';
 
 /////////////
 // GET
@@ -10,15 +11,14 @@ export async function getCabin(id) {
     .eq('id', id)
     .single();
 
-  // For testing
-  // await new Promise((res) => setTimeout(res, 1000));
-
   if (error) {
-    console.error(error);
+    console.error("Error fetching cabin:", error);
+    return null; // چون `single()` استفاده شده، برگرداندن `null` منطقی‌تره
   }
 
-  return data;
+  return data || null;  // اگر `data` هم `null` بود، `null` برگردان
 }
+
 
 export async function getCabinPrice(id) {
   const { data, error } = await supabase
