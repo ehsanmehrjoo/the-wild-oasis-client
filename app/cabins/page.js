@@ -1,18 +1,19 @@
 // import Counter from "@/app/_components/Counter";
 import CabinCard from "../_components/CabinCard";
 import { getCabins } from "@/app/_lib/data-service";
+import CabinList from "../_components/CabinList";
+import { Suspense } from "react";
+import Spinner from "../_components/Spinner";
 
 export const metadata = {
     title: 'Cabins',
   }
-export default async function Page() {
-  console.log('Starting');
+export default  function Page() {
+   
   // CHANGE
-   const cabins = await getCabins();
+   
  
- if (!cabins) {
-  return <p className="text-red-500">No cabins found.</p>;
-}
+  
    return (
      <div>
        <h1 className="text-4xl mb-5 text-accent-400 font-medium">
@@ -27,12 +28,10 @@ export default async function Page() {
          to paradise.
        </p>
  
-       {cabins.length > 0 && (
-         <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 xl:gap-14">
-           {cabins.map((cabin) => (
-             <CabinCard cabin={cabin} key={cabin.id} />
-           ))}
-         </div>
-       )}
+      <Suspense fallback={<Spinner />}>
+
+        <CabinList />
+      </Suspense>
+       
      </div>)
 }

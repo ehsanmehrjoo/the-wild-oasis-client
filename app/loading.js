@@ -1,9 +1,11 @@
+import Spinner from "@/app/_components/Spinner";
+
  
 
 function Loading() {
   console.log("loading");
   return (
-    <p style={{color: "red"}}>loading data....</p>
+    <Spinner />
   )
 }
 
