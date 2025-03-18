@@ -3,6 +3,7 @@ import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
 
+export const revalidate = 3600;
 // تولید متادیتا برای صفحه
 export async function generateMetadata({ params }) {
   try {

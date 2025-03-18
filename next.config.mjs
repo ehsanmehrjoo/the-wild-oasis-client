@@ -1,17 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
+  images: {
+    // unoptimized: true, // تصاویر بدون بهینه‌سازی بارگذاری می‌شوند
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'iljrwbhnejndlaaifxnp.supabase.co',
-        port: '',
-        pathname: '/storage/v1/object/public/cabin-images/**',
-        search: '',
+        protocol: "https",
+        hostname: "iljrwbhnejndlaaifxnp.supabase.co",
+        port: "",
+        pathname: "/storage/v1/object/public/cabin-images/**",
+        search: "",
       },
     ],
   },
-  output : "export"
+  // output: "export",
 };
 
 export default nextConfig;
