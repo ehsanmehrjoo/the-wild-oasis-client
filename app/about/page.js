@@ -2,12 +2,16 @@ import Link from "next/link";
 import Image from "next/image";
 import image1 from "@/public/about-1.jpg";
 import image2 from "@/public/about-2.jpg";
+import { getCabins } from "../_lib/data-service";
 
+export const revalidate = 3600
 export const metadata = {
   title: "About | The Wild Oasis",
 };
 
-function Page() {
+ async function Page() {
+  const cabins = await getCabins();
+  console.log(cabins.length);
   return (
     <div className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 text-base sm:text-lg lg:text-xl items-start">
@@ -26,7 +30,7 @@ function Page() {
               enjoying simple pleasures with family.
             </p>
             <p className="text-primary-200 leading-relaxed">
-              Our 8 luxury cabins provide a cozy base, but the real freedom and
+              Our {cabins.length} luxury cabins provide a cozy base, but the real freedom and
               peace you&apos;ll find in the surrounding mountains. Wander through
               lush forests, breathe in the fresh air, and watch the stars
               twinkle above from the warmth of a campfire or your hot tub.
