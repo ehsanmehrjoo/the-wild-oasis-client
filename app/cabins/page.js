@@ -1,4 +1,4 @@
-// import Counter from "@/app/_components/Counter";
+
 import CabinCard from "../_components/CabinCard";
 import { getCabins } from "@/app/_lib/data-service";
 import CabinList from "../_components/CabinList";
