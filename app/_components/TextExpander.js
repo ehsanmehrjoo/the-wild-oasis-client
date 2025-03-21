@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react';
 
 function TextExpander({ children }) {
@@ -15,6 +17,7 @@ function TextExpander({ children }) {
       >
         {isExpanded ? 'Show less' : 'Show more'}
       </button>
+
     </span>
   );
 }

@@ -1,3 +1,5 @@
+import Logo from "@/app/_components/Logo";
+import TextExpander from "@/app/_components/TextExpander";
 import { getCabin, getCabins } from "@/app/_lib/data-service";
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
@@ -79,7 +81,8 @@ export default async function Page({ params }) {
             </h3>
 
             <p className="text-base sm:text-lg md:text-xl text-primary-200 mb-8 md:mb-12 leading-relaxed tracking-wide">
-              {description || "No description available."} {/* متن پیش‌فرض */}
+              <TextExpander>{description || "No description available."}</TextExpander>
+              
             </p>
 
             <ul className="flex flex-col gap-6 mb-10">
