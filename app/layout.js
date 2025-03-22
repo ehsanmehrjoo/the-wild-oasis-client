@@ -6,8 +6,8 @@ import Header from "./_components/Header";
 const josefin = Josefin_Sans({
   subsets: ["latin"],
   display: "swap",
-  weight: ["300", "400", "600", "700"], // Specify weights for better control
-  variable: "--font-josefin", // CSS variable for advanced usage
+  weight: ["300", "400", "600", "700"],
+  variable: "--font-josefin",
 });
 
 // Metadata for SEO and better page indexing
@@ -23,7 +23,7 @@ export const metadata = {
     title: "The Wild Oasis - Luxury Cabins in the Italian Dolomites",
     description:
       "Experience luxury and nature at The Wild Oasis, nestled in the Italian Dolomites with breathtaking mountain views.",
-    images: ["/og-image.jpg"], // Add an image for social sharing
+    images: ["/og-image.jpg"],
     url: "https://thewild-oasis.com",
     type: "website",
   },
@@ -54,30 +54,25 @@ export default function RootLayout({ children }) {
         <footer className="bg-primary-900 py-6 text-center text-primary-300 border-t border-primary-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <p className="text-sm sm:text-base">
-              &copy; {new Date().getFullYear()} The Wild Oasis. All rights reserved.
+              &copy; {new Date().getFullYear()} The Wild Oasis. All rights reserved. | 
+              <span className="ml-2">&copy; Copyright by Ehsan Mehrjo</span>
             </p>
             <div className="mt-4 flex justify-center gap-6">
               <a
-                href="https://twitter.com/thewildoasis"
+                href="https://ehsanmehrjo.netlify.app/"
                 className="text-primary-400 hover:text-accent-500 transition-colors duration-200"
-                aria-label="Follow us on Twitter"
+                aria-label="Portfolio"
               >
-                Twitter
+                Portfolio
               </a>
               <a
-                href="https://instagram.com/thewildoasis"
+                href="https://www.linkedin.com/in/ehsan-mehrjo/"
                 className="text-primary-400 hover:text-accent-500 transition-colors duration-200"
-                aria-label="Follow us on Instagram"
+                aria-label="Follow us on Linkedin"
               >
-                Instagram
+                Linkedin
               </a>
-              <a
-                href="/contact"
-                className="text-primary-400 hover:text-accent-500 transition-colors duration-200"
-                aria-label="Contact us"
-              >
-                Contact
-              </a>
+             
             </div>
           </div>
         </footer>
