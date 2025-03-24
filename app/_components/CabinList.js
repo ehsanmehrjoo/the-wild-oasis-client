@@ -5,7 +5,7 @@ async function CabinList({ filter }) {
   const cabins = await getCabins();
   if (!cabins?.length) return null;
 
-  let displayedCabins  ;
+  let displayedCabins;
 if(filter === "all") displayedCabins = cabins
   if (filter === "small") {
     displayedCabins = cabins.filter((cabin) => cabin.maxCapacity <= 3);
