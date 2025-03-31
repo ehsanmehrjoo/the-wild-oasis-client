@@ -1,6 +1,7 @@
 import { Josefin_Sans } from "next/font/google";
 import "@/app/_styles/globals.css";
 import Header from "./_components/Header";
+import {ReservationProvider} from "@/app/_components/ReservationContext"
 
 // Define the Josefin Sans font with optimized settings
 const josefin = Josefin_Sans({
@@ -47,7 +48,12 @@ export default function RootLayout({ children }) {
 
         {/* Main Content */}
         <div className="flex-1 px-4 sm:px-6 md:px-8 lg:px-12 py-8 md:py-16 grid">
-          <main className="max-w-8xl mx-auto w-full">{children}</main>
+          <main className="max-w-8xl mx-auto w-full">
+          <ReservationProvider>
+
+          {children}
+          </ReservationProvider>
+          </main>
         </div>
 
         {/* Footer */}
