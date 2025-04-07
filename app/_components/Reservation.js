@@ -23,7 +23,7 @@ async function Reservation({ cabin }) {
 
         {/* فرم رزرو */}
         <div className="p-8 flex flex-col justify-center bg-primary-800">
-          {session.user ? <> <h2 className="text-3xl font-semibold text-white mb-4">Reservation Details</h2>
+          {session?.user ? <> <h2 className="text-3xl font-semibold text-white mb-4">Reservation Details</h2>
           <ReservationForm cabin={cabin} user={session.user} />  </> : <LoginMessage /> }
         </div>
       </div>
