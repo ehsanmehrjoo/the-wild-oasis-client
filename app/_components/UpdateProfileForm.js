@@ -1,20 +1,23 @@
 "use client"
 import Image from 'next/image'
 import React, { useState } from 'react'
+import { updateProfile } from '../_lib/actions'
  
 
-function UpdateProfileForm({children}) {
-    const [count , setCount] = useState()
-    const countryFlag = "pt.jpg";
-    const nationality = "portugal";
+function UpdateProfileForm({guest , children}) {
+   
+    const {fullName , email , nationality , nationalID , countryFlag} = guest
+
   return (
-    <form className="bg-primary-900 py-10 px-8 sm:px-12 rounded-2xl shadow-lg border border-primary-800 flex flex-col gap-8">
+    <form action={updateProfile} className="bg-primary-900 py-10 px-8 sm:px-12 rounded-2xl shadow-lg border border-primary-800 flex flex-col gap-8">
         <div className="space-y-3">
           <label className="block text-primary-100 font-medium text-sm sm:text-base">
             Full Name
           </label>
           <input
             disabled
+            defaultValue={fullName}
+            name='fullName'
             className="px-6 py-3 bg-primary-200 text-primary-800 w-full rounded-lg shadow-md disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-opacity-50"
           />
         </div>
@@ -25,6 +28,8 @@ function UpdateProfileForm({children}) {
           </label>
           <input
             disabled
+            defaultValue={email}
+            name='email'
             className="px-6 py-3 bg-primary-200 text-primary-800 w-full rounded-lg shadow-md disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-opacity-50"
           />
         </div>
@@ -35,10 +40,14 @@ function UpdateProfileForm({children}) {
               Where are you from?
             </label>
             <Image
-              // src={countryFlag}
-              alt="Country flag"
-              className="h-6 w-6 rounded-full border border-primary-700"
-            />
+  src={countryFlag}
+  alt="Country flag"
+  width={30}
+  height={30}
+  className="rounded-full border border-primary-700 object-cover"
+/>
+
+
           </div>
          {children}
         </div>
@@ -48,6 +57,7 @@ function UpdateProfileForm({children}) {
             National ID Number
           </label>
           <input
+          defaultValue={nationalID}
             name="nationalID"
             className="px-6 py-3 bg-primary-200 text-primary-800 w-full rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-opacity-50"
           />
