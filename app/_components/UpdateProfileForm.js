@@ -2,6 +2,8 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { updateProfile } from '../_lib/actions'
+import { useFormStatus } from 'react-dom'
+import SpinnerMini from './SpinnerMini'
  
 
 function UpdateProfileForm({guest , children}) {
@@ -39,13 +41,7 @@ function UpdateProfileForm({guest , children}) {
             <label htmlFor="nationality" className="block text-primary-100 font-medium text-sm sm:text-base">
               Where are you from?
             </label>
-            <Image
-  src={countryFlag}
-  alt="Country flag"
-  width={30}
-  height={30}
-  className="rounded-full border border-primary-700 object-cover"
-/>
+            <IMage countryFlag={countryFlag} />
 
 
           </div>
@@ -64,12 +60,25 @@ function UpdateProfileForm({guest , children}) {
         </div>
 
         <div className="flex justify-end items-center gap-6">
-          <button className="bg-accent-500 px-6 sm:px-8 py-3 sm:py-4 text-primary-800 font-semibold rounded-lg shadow-md hover:bg-accent-600 transition-all duration-300 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-opacity-60">
-            Update Profile
-          </button>
+          <Button />
         </div>
       </form>
   )
 }
-
+function Button(){
+  const { pending } = useFormStatus()
+  return <button disabled={pending} className="bg-accent-500 px-6 sm:px-8 py-3 sm:py-4 text-primary-800 font-semibold rounded-lg shadow-md hover:bg-accent-600 transition-all duration-300 disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-opacity-60">
+  {pending ? "Updating..." : "Update Profile"}
+</button>
+}
+function IMage({countryFlag}){
+  const { pending } = useFormStatus()
+return (pending ?  <SpinnerMini/> : <Image
+src={countryFlag}
+alt="Country flag"
+width={30}
+height={30}
+className="rounded-full border border-primary-700 object-cover"
+/>)
+}
 export default UpdateProfileForm
