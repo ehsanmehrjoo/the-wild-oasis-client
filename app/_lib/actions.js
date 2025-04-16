@@ -2,6 +2,7 @@
 
 import { auth, signIn, signOut } from "@/app/_lib/auth"
 import { supabase } from "./supabase"
+import { revalidatePath } from "next/cache"
 
 export async function updateProfile(formData) {
    const session = await auth()
@@ -20,6 +21,7 @@ const { data, error } = await supabase
 if (error) {
 throw new Error('Guest could not be updated');
 }
+revalidatePath("/account/profile")
 }
 export async function signInAction(){
     await signIn("google", {redirectTo : "/account"})
