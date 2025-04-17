@@ -8,8 +8,8 @@ export default async function Page() {
  
   // CHANGE
   const session = await auth()
-  console.log(session);
   const bookings = await getBookings(session.user.guestId);
+ 
 
   return (
     <div>
