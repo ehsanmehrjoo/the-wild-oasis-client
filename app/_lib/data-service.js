@@ -227,3 +227,19 @@ export async function deleteBooking(id) {
   }
   return data;
 }
+
+ 
+export async function getReviews(cabinId) {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("id, userName, comment, rating, created_at")
+    .eq("cabinId", cabinId)
+    .order("created_at", { ascending: false });
+
+  if (error || !Array.isArray(data)) {
+    console.error(error);
+    throw new Error("Reviews could not be loaded");
+  }
+
+  return data;
+}

@@ -45,3 +45,25 @@ export async function signInAction(){
     await signIn("google", {redirectTo : "/account"})
 }
  
+export async function AddRevieww(formData) {
+    const session = await auth();
+    if (!session) throw new Error("You must be logged in");
+  
+    const { cabinId, userName, rating, comment } = formData;
+  
+    const { data, error } = await supabase
+      .from('reviews')
+      .insert([
+        { cabinId, userName, rating, comment }
+      ])
+      .select()
+      .single();
+  
+    if (error) {
+      console.error(error);
+      throw new Error('Review could not be created');
+    }
+  
+    revalidatePath(`/cabins/${cabinId}`);
+  }
+  

@@ -1,14 +1,18 @@
 import Cabin from "@/app/_components/Cabin";
 import Reservation from "@/app/_components/Reservation";
+import ReviewForm from "@/app/_components/ReviewForm";
+import ReviewList from "@/app/_components/ReviewList";
 import Spinner from "@/app/_components/Spinner";
-import { getCabin, getCabins } from "@/app/_lib/data-service";
+import { auth } from "@/app/_lib/auth";
+import { getCabin, getCabins, getReviews } from "@/app/_lib/data-service";
 import { Suspense } from "react";
 
 export const revalidate = 3600;
-// تولید متادیتا برای صفحه
+
+// متادیتا برای SEO
 export async function generateMetadata({ params }) {
   try {
-    const { name } = await getCabin(params.cabinId); // اصلاح تایپو: cabinId
+    const { name } = await getCabin(params.cabinId);
     return { title: `Cabin ${name}` };
   } catch (error) {
     console.error("Error in generateMetadata:", error);
@@ -16,27 +20,23 @@ export async function generateMetadata({ params }) {
   }
 }
 
-// تولید پارامترهای استاتیک برای مسیرها
+// مسیرهای استاتیک
 export async function generateStaticParams() {
   try {
     const cabins = await getCabins();
-    const ids = cabins.map((cabin) => ({ cabinId: String(cabin.id) }));
-    return ids;
+    return cabins.map((cabin) => ({ cabinId: String(cabin.id) }));
   } catch (error) {
     console.error("Error in generateStaticParams:", error);
     return [];
   }
 }
 
-// کامپوننت اصلی صفحه
+// صفحه اصلی
 export default async function Page({ params }) {
-  // console.log(params);
   try {
+    const session = await auth();
     const cabin = await getCabin(params.cabinId);
-    // const settings = await getSettings();
-    // const bookedDates = await getBookedDatesByCabinId(params.cabinId)
 
-    // بررسی وجود کابین
     if (!cabin || !cabin.id) {
       return (
         <div className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 text-center">
@@ -45,22 +45,32 @@ export default async function Page({ params }) {
       );
     }
 
-
+    const reviews = await getReviews(cabin.id);
 
     return (
       <div className="max-w-7xl mx-auto mt-16 px-4 sm:px-6 lg:px-8">
-        {/* بخش اصلی */}
-        <Cabin cabin={cabin}/>
+        {/* اطلاعات کابین */}
+        <Cabin cabin={cabin} />
 
-        {/* فراخوان به اقدام */}
+        {/* فرم رزرو و نظر */}
         <div className="mt-16 md:mt-24 text-center">
-          <h2 className="text-5xl font-semibold text-center mb-10 text-accent-400">
+          <h2 className="text-5xl font-semibold mb-10 text-accent-400">
             Reserve {cabin.name} today. Pay on arrival.
           </h2>
+
           <Suspense fallback={<Spinner />}>
-          <Reservation  cabin={cabin}/>
+            <Reservation cabin={cabin} />
+            {session?.user ? (
+              <ReviewForm cabinId={cabin.id} session={session} />
+            ) : (
+              <div className="text-center mt-10 text-primary-300">
+                <p>You must be logged in to leave a review.</p>
+              </div>
+            )}
+
+            {/* لیست نظرات */}
+            <ReviewList reviews={reviews} />
           </Suspense>
-        
         </div>
       </div>
     );
