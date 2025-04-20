@@ -3,6 +3,7 @@ import Google from "next-auth/providers/google"
 import { createGuest, getGuest } from "./data-service";
  
  
+ 
   const authConfig  =  {
 
   providers: [Google({

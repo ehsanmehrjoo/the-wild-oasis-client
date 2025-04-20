@@ -36,6 +36,7 @@ export default async function Page({ params }) {
   try {
     const session = await auth();
     const cabin = await getCabin(params.cabinId);
+ 
 
     if (!cabin || !cabin.id) {
       return (

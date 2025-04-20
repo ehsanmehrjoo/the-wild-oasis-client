@@ -4,6 +4,7 @@ import { auth, signIn, signOut } from "@/app/_lib/auth"
 import { supabase } from "./supabase"
 import { revalidatePath } from "next/cache"
 import { getBookings } from "./data-service"
+import { redirect } from "next/navigation"
 
 export async function updateProfile(formData) {
    const session = await auth()
@@ -67,3 +68,23 @@ export async function AddRevieww(formData) {
     revalidatePath(`/cabins/${cabinId}`);
   }
   
+
+export async function UpdateBooking(formData) {
+  const bookingId = formData.get('bookingId');
+  const numGuests = formData.get('numGuests');
+  const observations = formData.get('observations');
+
+  const { data, error } = await supabase
+    .from('bookings')
+    .update({ numGuests, observations })
+    .eq('id', bookingId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error('Booking could not be updated');
+  }
+
+  redirect('/account/reservations');
+}
