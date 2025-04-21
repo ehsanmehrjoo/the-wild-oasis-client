@@ -1,9 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useOptimistic } from "react";
 import PropTypes from "prop-types";
 
 function ReviewList({ reviews }) {
+  const [optimisticReviews, addOptimisticReview] = useOptimistic(
+    reviews,
+    (currentReviews, newReview) => [...currentReviews, newReview]
+  );
+
   if (!Array.isArray(reviews) || reviews.length === 0) {
     return (
       <div className="text-center mt-8 animate-fade-in">
@@ -14,7 +19,7 @@ function ReviewList({ reviews }) {
 
   return (
     <div className="space-y-6 mt-8 max-w-3xl mx-auto">
-      {reviews.map(
+      {optimisticReviews.map(
         ({
           id,
           userName = "Anonymous",
@@ -22,7 +27,6 @@ function ReviewList({ reviews }) {
           rating = 0,
           created_at: createdAt,
         }) => {
-          // Format date to English
           const date = new Date(createdAt);
           const formattedDate = date.toLocaleDateString("en-US", {
             year: "numeric",
@@ -36,7 +40,6 @@ function ReviewList({ reviews }) {
               key={id}
               className="p-6 rounded-xl bg-primary-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-fade-in"
             >
-              {/* Card Header */}
               <div className="flex items-center justify-between">
                 <p className="text-accent-300 font-bold text-lg">{userName}</p>
                 <div
@@ -62,14 +65,9 @@ function ReviewList({ reviews }) {
                 </div>
               </div>
 
-              {/* Comment */}
               <p className="text-primary-200 mt-3 leading-relaxed">{comment}</p>
 
-              {/* Date */}
-              <p
-                className="text-xs text-primary-500 mt-3"
-                title={fullDate}
-              >
+              <p className="text-xs text-primary-500 mt-3" title={fullDate}>
                 {formattedDate}
               </p>
             </div>
@@ -92,7 +90,7 @@ ReviewList.propTypes = {
   ).isRequired,
 };
 
-// Add fade-in animation with Tailwind
+// Tailwind animation
 const style = `
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -103,7 +101,6 @@ const style = `
   }
 `;
 
-// Inject styles (if not using a global stylesheet)
 if (typeof document !== "undefined") {
   const styleSheet = document.createElement("style");
   styleSheet.innerText = style;
