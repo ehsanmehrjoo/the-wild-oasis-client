@@ -1,3 +1,5 @@
+
+
 import Cabin from "@/app/_components/Cabin";
 import Reservation from "@/app/_components/Reservation";
 import ReviewForm from "@/app/_components/ReviewForm";
@@ -34,7 +36,6 @@ export async function generateStaticParams() {
 // صفحه اصلی
 export default async function Page({ params }) {
   try {
-    const session = await auth();
     const cabin = await getCabin(params.cabinId);
  
 
@@ -61,13 +62,9 @@ export default async function Page({ params }) {
 
           <Suspense fallback={<Spinner />}>
             <Reservation cabin={cabin} />
-            {session?.user ? (
-              <ReviewForm cabinId={cabin.id} session={session} />
-            ) : (
-              <div className="text-center mt-10 text-primary-300">
-                <p>You must be logged in to leave a review.</p>
-              </div>
-            )}
+         
+              <ReviewForm cabinId={cabin.id} />
+            
 
             {/* لیست نظرات */}
             <ReviewList reviews={reviews} />

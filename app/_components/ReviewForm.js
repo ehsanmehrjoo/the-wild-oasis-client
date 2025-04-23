@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { AddRevieww } from "../_lib/actions";
 import PropTypes from "prop-types";
+
 function StarRating({ rating, setRating }) {
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -36,20 +38,27 @@ function StarRating({ rating, setRating }) {
           </button>
         );
       })}
-      <span className="ml-2 text-sm text-primary-400">
-        ({rating}/5)
-      </span>
+      <span className="ml-2 text-sm text-primary-400">({rating}/5)</span>
     </div>
   );
 }
 
-function ReviewForm({ cabinId, session }) {
-  const [userName, setUserName] = useState(session?.user?.name || "");
+function ReviewForm({ cabinId }) {
+  const { data: session } = useSession();
+  const [userName, setUserName] = useState("");
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  
+  // Set username from session once it's loaded
+  useEffect(() => {
+    if (session?.user?.name) {
+      setUserName(session.user.name);
+    }
+  }, [session]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -59,91 +68,92 @@ function ReviewForm({ cabinId, session }) {
     try {
       await AddRevieww({ cabinId, userName, rating, comment });
 
-      // Clean the form
-      setUserName("");
+      setUserName(session?.user?.name || "");
       setRating(5);
       setComment("");
 
-      // Refresh the page to see the new review
       router.refresh();
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "An error occurred while submitting the review.");
     } finally {
       setIsSubmitting(false);
     }
   }
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="mt-10 p-6 bg-primary-900 rounded-xl shadow-lg max-w-2xl mx-auto space-y-6 animate-fade-in"
-    >
-      <h4 className="text-2xl font-bold text-accent-200">Leave a Review</h4>
-
-      <div>
-        <label htmlFor="userName" className="block text-primary-200 mb-1">
-          Your Name
-        </label>
-        <input
-          id="userName"
-          type="text"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          placeholder="Enter your name"
-          className="w-full p-3 rounded-lg bg-primary-800 text-primary-100 border border-primary-700 focus:border-accent-500 focus:ring focus:ring-accent-500 focus:ring-opacity-50 transition-colors"
-          required
-        />
-      </div>
-
-      <div>
-        <label htmlFor="comment" className="block text-primary-200 mb-1">
-          Your Comment
-        </label>
-        <textarea
-          id="comment"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          placeholder="Share your thoughts..."
-          className="w-full p-3 rounded-lg bg-primary-800 text-primary-100 border border-primary-700 focus:border-accent-500 focus:ring focus:ring-accent-500 focus:ring-opacity-50 transition-colors resize-y min-h-[120px]"
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block text-primary-200 mb-1">Rating</label>
-        <StarRating rating={rating} setRating={setRating} />
-      </div>
-
-      {error && (
-        <p className="text-red-400 text-sm animate-pulse bg-red-900/20 p-2 rounded">
-          {error}
-        </p>
-      )}
-
-      <button
-        disabled={isSubmitting}
-        className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 ${
-          isSubmitting
-            ? "bg-accent-600 cursor-not-allowed"
-            : "bg-accent-500 hover:bg-accent-600"
-        } text-primary-900`}
-      >
-        {isSubmitting ? "Submitting..." : "Submit Review"}
-      </button>
-    </form>
-  );
+ 
+    return (
+      session?.user ? (
+        <form
+          onSubmit={handleSubmit}
+          className="mt-10 p-6 bg-primary-900 rounded-xl shadow-lg max-w-2xl mx-auto space-y-6 animate-fade-in"
+        >
+          <h4 className="text-2xl font-bold text-accent-200">Leave a Review</h4>
+    
+          <div>
+            <label htmlFor="userName" className="block text-primary-200 mb-1">
+              Your Name
+            </label>
+            <input
+              id="userName"
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="Enter your name"
+              className="w-full p-3 rounded-lg bg-primary-800 text-primary-100 border border-primary-700 focus:border-accent-500 focus:ring focus:ring-accent-500 focus:ring-opacity-50 transition-colors"
+              required
+            />
+          </div>
+    
+          <div>
+            <label htmlFor="comment" className="block text-primary-200 mb-1">
+              Your Comment
+            </label>
+            <textarea
+              id="comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Share your thoughts..."
+              className="w-full p-3 rounded-lg bg-primary-800 text-primary-100 border border-primary-700 focus:border-accent-500 focus:ring focus:ring-accent-500 focus:ring-opacity-50 transition-colors resize-y min-h-[120px]"
+              required
+            />
+          </div>
+    
+          <div>
+            <label className="block text-primary-200 mb-1">Rating</label>
+            <StarRating rating={rating} setRating={setRating} />
+          </div>
+    
+          {error && (
+            <p className="text-red-400 text-sm animate-pulse bg-red-900/20 p-2 rounded">
+              {error}
+            </p>
+          )}
+    
+          <button
+            disabled={isSubmitting}
+            className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 ${
+              isSubmitting
+                ? "bg-accent-600 cursor-not-allowed"
+                : "bg-accent-500 hover:bg-accent-600"
+            } text-primary-900`}
+          >
+            {isSubmitting ? "Submitting..." : "Submit Review"}
+          </button>
+        </form>
+      ) : (
+        <div className="text-center mt-10 text-primary-300">
+          <p>You must be logged in to leave a review.</p>
+        </div>
+      )
+    );
+    
 }
 
 ReviewForm.propTypes = {
   cabinId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  session: PropTypes.shape({
-    user: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-  }),
 };
 
-// Add fade-in animation with Tailwind
+// Fade-in animation
 const style = `
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -157,7 +167,6 @@ const style = `
   }
 `;
 
-// Inject styles (if not using a global stylesheet)
 if (typeof document !== "undefined") {
   const styleSheet = document.createElement("style");
   styleSheet.innerText = style;
