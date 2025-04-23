@@ -75,7 +75,7 @@ export async function signInAction(){
     await signIn("google", {redirectTo : "/account"})
 }
  
-export async function AddRevieww(formData) {
+export async function AddReview(formData) {
     const session = await auth();
     if (!session) throw new Error("You must be logged in");
   

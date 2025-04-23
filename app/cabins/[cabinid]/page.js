@@ -61,14 +61,11 @@ export default async function Page({ params }) {
           </h2>
 
           <Suspense fallback={<Spinner />}>
-            <Reservation cabin={cabin} />
-         
-              <ReviewForm cabinId={cabin.id} />
-            
-
-            {/* لیست نظرات */}
-            <ReviewList reviews={reviews} />
+           <Reservation cabin={cabin} />
+           <ReviewForm cabinId={cabin.id} />
+           <ReviewList reviews={reviews} />
           </Suspense>
+
         </div>
       </div>
     );

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { AddRevieww } from "../_lib/actions";
+import { AddReview } from "../_lib/actions";
 import PropTypes from "prop-types";
 
 function StarRating({ rating, setRating }) {
@@ -66,7 +66,7 @@ function ReviewForm({ cabinId }) {
     setError("");
 
     try {
-      await AddRevieww({ cabinId, userName, rating, comment });
+      await AddReview({ cabinId, userName, rating, comment });
 
       setUserName(session?.user?.name || "");
       setRating(5);
