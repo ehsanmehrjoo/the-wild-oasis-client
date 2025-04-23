@@ -6,20 +6,28 @@ import { notFound } from 'next/navigation';
 // GET
 
 export async function getCabin(id) {
+  const cabinId = Number(id);
+  if (!cabinId || isNaN(cabinId)) {
+    console.error("Invalid cabin ID:", id);
+    notFound();
+    return null;
+  }
+
   const { data, error } = await supabase
-    .from('cabins')
-    .select('*')
-    .eq('id', id)
+    .from("cabins")
+    .select("*")
+    .eq("id", cabinId)
     .single();
 
   if (error) {
     console.error("Error fetching cabin:", error);
-    notFound()
-    return null; // چون `single()` استفاده شده، برگرداندن `null` منطقی‌تره
+    notFound();
+    return null;
   }
 
-  return data || null;  // اگر `data` هم `null` بود، `null` برگردان
+  return data || null;
 }
+
 
 
 export async function getCabinPrice(id) {

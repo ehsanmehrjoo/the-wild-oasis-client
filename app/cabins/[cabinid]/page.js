@@ -14,13 +14,17 @@ export const revalidate = 3600;
 // متادیتا برای SEO
 export async function generateMetadata({ params }) {
   try {
-    const { name } = await getCabin(params.cabinId);
+    const cabinId = Number(params.cabinId);
+    if (isNaN(cabinId)) throw new Error("Invalid cabin ID");
+
+    const { name } = await getCabin(cabinId);
     return { title: `Cabin ${name}` };
   } catch (error) {
     console.error("Error in generateMetadata:", error);
     return { title: "Cabin Not Found" };
   }
 }
+
 
 // مسیرهای استاتیک
 export async function generateStaticParams() {
@@ -36,8 +40,9 @@ export async function generateStaticParams() {
 // صفحه اصلی
 export default async function Page({ params }) {
   try {
-    const cabin = await getCabin(params.cabinId);
- 
+    const cabinId = Number(params.cabinId);
+    if (isNaN(cabinId)) throw new Error("Invalid cabin ID");
+    const cabin = await getCabin(cabinId);
 
     if (!cabin || !cabin.id) {
       return (
