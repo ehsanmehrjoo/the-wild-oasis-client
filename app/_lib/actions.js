@@ -26,6 +26,35 @@ throw new Error('Guest could not be updated');
 revalidatePath("/account/profile")
 }
 
+export async function createBooking(bookedData , formData){
+  const session = await auth()
+  if(!session) throw new Error("You must be logged in")
+  const newBooking = {
+    ...bookedData,
+    guestId : session.user.guestId,
+    numGuests : Number(formData.get("numGuests")),
+    observations : formData.get("observations").slice(0,1000),
+    extrasPrice : 0, 
+    totalPrice : bookedData.cabinPrice,
+    isPaid : false,
+    hasBreakfast : false, 
+    status : "unconfirmed", 
+    
+  }
+    const { error } = await supabase
+  .from('bookings')
+  .insert([newBooking])
+  
+
+if (error) {
+
+  throw new Error('Booking could not be created');
+}
+revalidatePath(`/cabins/${bookedData.cabinId}`)
+redirect("/cabins/thankyou")
+}
+  
+
 export async function deleteReservation(bookingId){
     const session = await auth()
     if(!session) throw new Error("You must be logged in")
@@ -36,7 +65,7 @@ export async function deleteReservation(bookingId){
         const {  error } = await supabase.from('bookings').delete().eq('id', bookingId);
 
     if (error) {
-      console.error(error);
+      
       throw new Error('Booking could not be deleted');
     }
     revalidatePath("/account/reservations")
@@ -61,7 +90,6 @@ export async function AddRevieww(formData) {
       .single();
   
     if (error) {
-      console.error(error);
       throw new Error('Review could not be created');
     }
   
@@ -82,7 +110,6 @@ export async function UpdateBooking(formData) {
     .single();
 
   if (error) {
-    console.error(error);
     throw new Error('Booking could not be updated');
   }
 

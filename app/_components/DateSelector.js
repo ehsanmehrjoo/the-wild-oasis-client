@@ -1,6 +1,6 @@
 "use client"
-import { isWithinInterval } from "date-fns";
-import { useContext, useState } from "react";
+import { isBefore, isSameDay, isWithinInterval, startOfToday } from "date-fns";
+// import { useContext, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { useReservation } from "./ReservationContext";
@@ -17,17 +17,18 @@ function isAlreadyBooked(range, datesArr) {
 
 function DateSelector({ bookedDates, cabin, settings }) {
 const {range, setRange , resetRange} = useReservation()
-
+const displayRange = isAlreadyBooked(range, bookedDates) ? {} : range;
   // اطلاعات قیمت و تخفیف
   const regularPrice = cabin?.regularPrice || 0;
   const discount = cabin?.discount || 0;
-  const numNights = range.from && range.to 
-    ? Math.ceil((range.to - range.from) / (1000 * 60 * 60 * 24)) 
+  const numNights = displayRange.from && displayRange.to 
+    ? Math.ceil((displayRange.to - displayRange.from) / (1000 * 60 * 60 * 24)) 
     : 0;
   const cabinPrice = numNights * (regularPrice - discount);
 
   // تنظیمات
   const { minBookingLength = 1, maxBookingLength = 30 } = settings;
+
 
  
  
@@ -38,16 +39,20 @@ const {range, setRange , resetRange} = useReservation()
         className="pt-12 place-self-center"
         mode="range"
         onSelect={setRange}
-        selected={range}
+        selected={displayRange}
         modifiersClassNames={{
     selected: "bg-accent-600 ",  // تغییر رنگ دایره انتخاب‌شده
     range_middle: "bg-accent-400", // تغییر رنگ پس‌زمینه بازه انتخابی
   }}
-        disabled={{ before: new Date() }}
+         
         fromMonth={new Date()}
         toYear={new Date().getFullYear() + 5}
         captionLayout="dropdown"
         numberOfMonths={2}
+        disabled={(curDate) =>
+    isBefore(curDate, startOfToday()) ||
+  bookedDates.some((date) => isSameDay(date, curDate))
+}
       />
 
       <div className="flex items-center justify-between px-8 bg-accent-500  text-primary-800 h-[72px]">
