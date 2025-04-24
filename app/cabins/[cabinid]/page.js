@@ -1,5 +1,5 @@
 
-
+export const dynamic = "force-dynamic";
 import Cabin from "@/app/_components/Cabin";
 import Reservation from "@/app/_components/Reservation";
 import ReviewForm from "@/app/_components/ReviewForm";
@@ -41,9 +41,9 @@ export async function generateStaticParams() {
 export default async function Page({ params }) {
   try {
     const cabinId = Number(params.cabinId);
-    if (isNaN(cabinId)) throw new Error("Invalid cabin ID");
+    // if (isNaN(cabinId)) throw new Error("Invalid cabin ID");
     const cabin = await getCabin(cabinId);
-
+console.log(cabinId);
     if (!cabin || !cabin.id) {
       return (
         <div className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 text-center">
