@@ -97,9 +97,15 @@ import { Suspense } from "react";
 // };
 
 export async function generateMetadata({ params }) {
-  const { name } = await getCabin(params.cabinId);
-  return { title: `Cabin ${name}` };
+  const cabinId = parseInt(params?.cabinId, 10);
+  if (!cabinId || isNaN(cabinId)) {
+    return { title: "Invalid Cabin" };
+  }
+
+  const cabin = await getCabin(cabinId);
+  return { title: `Cabin ${cabin?.name || "Unknown"}` };
 }
+
 
 export async function generateStaticParams() {
   const cabins = await getCabins();
@@ -110,7 +116,30 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params }) {
-  const cabin = await getCabin(params.cabinId);
+  const cabinId = parseInt(params?.cabinId, 10);
+
+  if (!cabinId || isNaN(cabinId)) {
+    console.error("Invalid cabin ID:", params?.cabinId);
+    return (
+      <div className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-3xl font-semibold text-accent-100">
+          Invalid Cabin ID
+        </h2>
+      </div>
+    );
+  }
+
+  const cabin = await getCabin(cabinId);
+
+  if (!cabin) {
+    return (
+      <div className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-3xl font-semibold text-accent-100">
+          Cabin not found
+        </h2>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto mt-8">
