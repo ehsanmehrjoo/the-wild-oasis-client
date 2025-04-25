@@ -1,5 +1,5 @@
-
 export const dynamic = "force-dynamic";
+
 import Cabin from "@/app/_components/Cabin";
 import Reservation from "@/app/_components/Reservation";
 import ReviewForm from "@/app/_components/ReviewForm";
@@ -11,22 +11,15 @@ import { Suspense } from "react";
 
 export const revalidate = 3600;
 
-// متادیتا برای SEO
+// متادیتا برای SEO - سبک و سریع
 export async function generateMetadata({ params }) {
-  try {
-    const cabinId = Number(params.cabinId);
-    if (isNaN(cabinId)) throw new Error("Invalid cabin ID");
-
-    const { name } = await getCabin(cabinId);
-    return { title: `Cabin ${name}` };
-  } catch (error) {
-    console.error("Error in generateMetadata:", error);
-    return { title: "Cabin Not Found" };
-  }
+  const cabinId = params?.cabinId || "Unknown";
+  return {
+    title: `Cabin ${cabinId}`,
+  };
 }
 
-
-// مسیرهای استاتیک
+// تولید مسیرهای استاتیک
 export async function generateStaticParams() {
   try {
     const cabins = await getCabins();
@@ -37,17 +30,23 @@ export async function generateStaticParams() {
   }
 }
 
-// صفحه اصلی
+// صفحه‌ی نمایش کابین
 export default async function Page({ params }) {
   try {
-    const cabinId = Number(params.cabinId);
-    // if (isNaN(cabinId)) throw new Error("Invalid cabin ID");
+    const cabinId = parseInt(params?.cabinId, 10);
+
+    if (isNaN(cabinId)) {
+      throw new Error("Invalid cabin ID");
+    }
+
     const cabin = await getCabin(cabinId);
-console.log(cabinId);
+
     if (!cabin || !cabin.id) {
       return (
         <div className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-semibold text-accent-100">Cabin not found</h2>
+          <h2 className="text-3xl font-semibold text-accent-100">
+            Cabin not found
+          </h2>
         </div>
       );
     }
@@ -66,11 +65,10 @@ console.log(cabinId);
           </h2>
 
           <Suspense fallback={<Spinner />}>
-           <Reservation cabin={cabin} />
-           <ReviewForm cabinId={cabin.id} />
-           <ReviewList reviews={reviews} />
+            <Reservation cabin={cabin} />
+            <ReviewForm cabinId={cabin.id} />
+            <ReviewList reviews={reviews} />
           </Suspense>
-
         </div>
       </div>
     );
@@ -78,7 +76,9 @@ console.log(cabinId);
     console.error("Error in Page component:", error);
     return (
       <div className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl font-semibold text-accent-100">Error loading cabin</h2>
+        <h2 className="text-3xl font-semibold text-accent-100">
+          Error loading cabin
+        </h2>
         <p className="text-primary-300 mt-2">{error.message}</p>
       </div>
     );
