@@ -14,7 +14,7 @@ export async function updateProfile(formData) {
    if(!/^[a-zA-Z0-9]{6,12}$/.test(nationalID)) throw new Error("Please provide a valid national ID")
     const updatedData = {nationality, countryFlag ,nationalID}
  
-const { data, error } = await supabase
+const {  error } = await supabase
 .from('guests')
 .update(updatedData)
 .eq('id', session.user.guestId)
@@ -62,7 +62,7 @@ export async function deleteReservation(bookingId){
         const guestBooking = await  getBookings(session.user.guestId)
         const guestBookingIds = guestBooking.map(booking => booking.id)
         if(!guestBookingIds.includes(bookingId)) throw new Error("You are not allowed to delete this booking")
-        const {  error } = await supabase.from('bookings').delete().eq('id', bookingId);
+        const { error } = await supabase.from('bookings').delete().eq('id', bookingId);
 
     if (error) {
       
@@ -102,7 +102,7 @@ export async function UpdateBooking(formData) {
   const numGuests = formData.get('numGuests');
   const observations = formData.get('observations');
 
-  const { data, error } = await supabase
+  const {  error } = await supabase
     .from('bookings')
     .update({ numGuests, observations })
     .eq('id', bookingId)

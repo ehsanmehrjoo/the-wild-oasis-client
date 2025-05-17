@@ -1,6 +1,6 @@
 "use client"
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React from 'react'
 import { updateProfile } from '../_lib/actions'
 import { useFormStatus } from 'react-dom'
 import SpinnerMini from './SpinnerMini'
