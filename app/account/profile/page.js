@@ -9,7 +9,19 @@ export const metadata = {
 
 export default async function Page() {
   const session = await auth();
-  const guest = await getGuest(session.user.email);
+  const guest = await getGuest(session?.user?.email);
+
+  // اگر guest پیدا نشد، پیغام جایگزین بده
+  if (!guest) {
+    return (
+      <div className="max-w-3xl mx-auto mt-8 sm:mt-12 px-4 sm:px-6 lg:px-8 text-center text-primary-200">
+        <h2 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-accent-400 mb-4">
+          No Guest Profile Found
+        </h2>
+        <p>Please create your profile first.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto mt-8 sm:mt-12 px-4 sm:px-6 lg:px-8">
@@ -30,7 +42,7 @@ export default async function Page() {
             name="nationality"
             id="nationality"
             className="px-4 sm:px-6 py-3 bg-primary-200 text-primary-800 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-opacity-50 transition-all duration-200"
-            defaultCountry={guest.nationality}
+            defaultCountry={guest?.nationality || ""}
             aria-label="Select your nationality"
           />
         </UpdateProfileForm>

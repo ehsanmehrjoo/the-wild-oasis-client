@@ -10,8 +10,8 @@ export const metadata = {
 };
 
  async function Page() {
+  
   const cabins = await getCabins();
-  console.log(cabins.length);
   return (
     <div className="max-w-7xl mx-auto mt-12 px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 text-base sm:text-lg lg:text-xl items-start">

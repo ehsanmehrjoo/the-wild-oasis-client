@@ -71,14 +71,23 @@ function Button(){
   {pending ? "Updating..." : "Update Profile"}
 </button>
 }
-function IMage({countryFlag}){
-  const { pending } = useFormStatus()
-return (pending ?  <SpinnerMini/> : <Image
-src={countryFlag}
-alt="Country flag"
-width={30}
-height={30}
-className="rounded-full border border-primary-700 object-cover"
-/>)
+function IMage({ countryFlag }) {
+  const { pending } = useFormStatus();
+
+  if (pending) return <SpinnerMini />;
+  // if (!countryFlag) return null; // یا یه div خالی
+
+  return  (countryFlag ? 
+    <Image
+      src={countryFlag}
+      alt="Country flag"
+      width={30}
+      height={30}
+      className="rounded-full border border-primary-700 object-cover"
+    /> :  <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-white text-xs font-semibold border border-primary-700">
+       {/* می‌تونی این علامت رو به شکل یک آیکون کوچک پرچم هم تغییر بدی  */}
+    </div>
+  );
 }
+
 export default UpdateProfileForm

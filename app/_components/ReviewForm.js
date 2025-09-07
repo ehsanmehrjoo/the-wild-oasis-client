@@ -44,7 +44,7 @@ function StarRating({ rating, setRating }) {
 }
 
 function ReviewForm({ cabinId }) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [userName, setUserName] = useState("");
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
@@ -52,8 +52,7 @@ function ReviewForm({ cabinId }) {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  
-  // Set username from session once it's loaded
+  // وقتی session لود شد، userName رو ست کن
   useEffect(() => {
     if (session?.user?.name) {
       setUserName(session.user.name);
@@ -80,73 +79,82 @@ function ReviewForm({ cabinId }) {
     }
   }
 
- 
+  // ✅ هندل کردن حالت‌های مختلف session
+  if (status === "loading") {
     return (
-      session?.user ? (
-        <form
-          onSubmit={handleSubmit}
-          className="mt-10 p-6 bg-primary-900 rounded-xl shadow-lg max-w-2xl mx-auto space-y-6 animate-fade-in"
-        >
-          <h4 className="text-2xl font-bold text-accent-200">Leave a Review</h4>
-    
-          <div>
-            <label htmlFor="userName" className="block text-primary-200 mb-1">
-              Your Name
-            </label>
-            <input
-              id="userName"
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              placeholder="Enter your name"
-              className="w-full p-3 rounded-lg bg-primary-800 text-primary-100 border border-primary-700 focus:border-accent-500 focus:ring focus:ring-accent-500 focus:ring-opacity-50 transition-colors"
-              required
-            />
-          </div>
-    
-          <div>
-            <label htmlFor="comment" className="block text-primary-200 mb-1">
-              Your Comment
-            </label>
-            <textarea
-              id="comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Share your thoughts..."
-              className="w-full p-3 rounded-lg bg-primary-800 text-primary-100 border border-primary-700 focus:border-accent-500 focus:ring focus:ring-accent-500 focus:ring-opacity-50 transition-colors resize-y min-h-[120px]"
-              required
-            />
-          </div>
-    
-          <div>
-            <label className="block text-primary-200 mb-1">Rating</label>
-            <StarRating rating={rating} setRating={setRating} />
-          </div>
-    
-          {error && (
-            <p className="text-red-400 text-sm animate-pulse bg-red-900/20 p-2 rounded">
-              {error}
-            </p>
-          )}
-    
-          <button
-            disabled={isSubmitting}
-            className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 ${
-              isSubmitting
-                ? "bg-accent-600 cursor-not-allowed"
-                : "bg-accent-500 hover:bg-accent-600"
-            } text-primary-900`}
-          >
-            {isSubmitting ? "Submitting..." : "Submit Review"}
-          </button>
-        </form>
-      ) : (
-        <div className="text-center mt-10 text-primary-300">
-          <p>You must be logged in to leave a review.</p>
-        </div>
-      )
+      <div className="text-center mt-10 text-primary-300 animate-pulse">
+        Loading user...
+      </div>
     );
-    
+  }
+
+  if (status === "unauthenticated") {
+    return (
+      <div className="text-center mt-10 text-primary-300">
+        <p>You must be logged in to leave a review.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="mt-10 p-6 bg-primary-900 rounded-xl shadow-lg max-w-2xl mx-auto space-y-6 animate-fade-in"
+    >
+      <h4 className="text-2xl font-bold text-accent-200">Leave a Review</h4>
+
+      <div>
+        <label htmlFor="userName" className="block text-primary-200 mb-1">
+          Your Name
+        </label>
+        <input
+          id="userName"
+          type="text"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          placeholder="Enter your name"
+          className="w-full p-3 rounded-lg bg-primary-800 text-primary-100 border border-primary-700 focus:border-accent-500 focus:ring focus:ring-accent-500 focus:ring-opacity-50 transition-colors"
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="comment" className="block text-primary-200 mb-1">
+          Your Comment
+        </label>
+        <textarea
+          id="comment"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Share your thoughts..."
+          className="w-full p-3 rounded-lg bg-primary-800 text-primary-100 border border-primary-700 focus:border-accent-500 focus:ring focus:ring-accent-500 focus:ring-opacity-50 transition-colors resize-y min-h-[120px]"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-primary-200 mb-1">Rating</label>
+        <StarRating rating={rating} setRating={setRating} />
+      </div>
+
+      {error && (
+        <p className="text-red-400 text-sm animate-pulse bg-red-900/20 p-2 rounded">
+          {error}
+        </p>
+      )}
+
+      <button
+        disabled={isSubmitting}
+        className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 ${
+          isSubmitting
+            ? "bg-accent-600 cursor-not-allowed"
+            : "bg-accent-500 hover:bg-accent-600"
+        } text-primary-900`}
+      >
+        {isSubmitting ? "Submitting..." : "Submit Review"}
+      </button>
+    </form>
+  );
 }
 
 ReviewForm.propTypes = {
